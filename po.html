@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة وتحليل نتائج الطلاب</title>
+</head>
+<body>                                                                     
+    <h2 style="text-align: center; font-family: Tahoma; margin-top: 50px;">        
+        🎓 نظام إدارة وتحليل نتائج الطلاب يعمل بنجاح!<br>                 
+        <span style="font-size: 16px; color: #555;">اضغط F12 أو كليك يمين واختار Inspect ثم افتح (Console) لرؤية التقارير.</span>
+    </h2>
+    <script>                                           ////هذا الجزء مسأول عن عرض وتحديث نتأج الطلاب وواجة الستخدم بناء علي واجة الطالب//
+                                            /****************************************************************************************#/
+        class Student {
+        constructor(id, name, grades, attendance) {
+            this.id = id;
+            this.name = name;
+            this.grades = grades;
+            this.attendance = attendance;
+        }
+                                           //نظام برمجي لحساب تقدير ومتوسط الطلاب //
+                    /**************************************************************************************************/
+        calculateAverage() {
+            const total = this.grades.reduce((sum, grade) => sum + grade, 0);
+            return total / this.grades.length;
+        }
+                                              //الشروط الخاصة بالطلاب
+                                        /*****************************/
+        getGradeLetter(avg) {
+            if (avg >= 85) return 'A';
+            if (avg >= 75) return 'B';
+            if (avg >= 65) return 'C';
+            if (avg >= 50) return 'D';
+            if (avg >= 40) return 'E';
+            return 'F';
+        }
+                               //ان لو الطالب اعلي من 50 ناجح//
+                            /**************************************/
+        getFinalStatus() {
+            const avg = this.calculateAverage();
+            if (avg >= 50 && this.attendance >= 75) {
+            return 'ناجح';
+            } else {
+            return 'يحتاج مراجعة';
+            }
+            }
+        }
+
+        const studentsList = [
+            new Student(1, 'أحمد محمود', [85, 90, 88], 90),
+            new Student(2, 'محمود حسن', [42, 45, 48], 80),
+            new Student(3, 'سارة علي', [70, 75, 65], 60),
+            new Student(4, 'خالد إبراهيم', [44, 46, 41], 85)
+        ];
+
+        console.log("=== 📋 تقرير أداء جميع الطلاب في النظام ===");
+        studentsList.forEach(student => {
+            const avg = student.calculateAverage();
+            console.log(
+            `الاسم: ${student.name} | المتوسط: ${avg.toFixed(2)} | التقدير: ${student.getGradeLetter(avg)} | النتيجة: ${student.getFinalStatus()}`
+        );
+        });
+
+        const strugglingStudents = studentsList.filter(student => {
+        const avg = student.calculateAverage();
+        return avg >= 40 && avg <= 49;
+        });
+
+        const upgradedAverages = strugglingStudents.map(student => {
+            return student.calculateAverage() + 5;
+        });
+
+        const totalUpgraded = upgradedAverages.reduce((sum, avg) => sum + avg, 0);
+
+        let upgradedAverage = 0;
+        if (strugglingStudents.length > 0) {
+            upgradedAverage = totalUpgraded / strugglingStudents.length;
+        }
+
+        console.log("\n=== ⚖️ تقرير لجنة الرأفة للمتعثرين ===");
+        console.log(`عدد الطلاب المتعثرين: ${strugglingStudents.length}`);
+
+        if (strugglingStudents.length > 0) {
+            console.log("الطلاب بعد تطبيق درجات الرأفة (+5 درجات):");
+            strugglingStudents.forEach((student, index) => {
+            const oldAvg = student.calculateAverage();
+            const newAvg = upgradedAverages[index];
+            const newLetter = student.getGradeLetter(newAvg);
+            console.log(
+                `- الطالب: ${student.name} | المتوسط القديم: ${oldAvg.toFixed(2)} | المتوسط بعد الرأفة: ${newAvg.toFixed(2)} | التقدير الجديد: ${newLetter}`
+            );
+        }); 
+        console.log(`\n📊 المتوسط العام للطلاب المتعثرين بعد التعديل: ${upgradedAverage.toFixed(2)}`);
+        } else {
+            console.log("لا توجد حالات تعثر تستدعي الرأفة.");
+        }
+    </script>
+</body>
+</html>
